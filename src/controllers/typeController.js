@@ -1,24 +1,36 @@
-const {Type} = require('../models/models');
+const typeService = require('../service/typeService');
 
 class TypeController {
-  async create(req, res) {
-    const {name} = req.body;
-    const type = await Type.create({name});
+  async create(req, res, next) {
+    try {
+      const {name} = req.body;
+      const type = await typeService.create(name);
 
-    return res.json(type)
+      return res.json(type)
+    } catch (e) {
+      next(e);
+    }
   }
 
-  async delete(req, res) {
-    const {name} = req.body;
-    await Type.destroy({where: { name }});
+  async delete(req, res, next) {
+    try {
+      const {name} = req.body;
+      await typeService.delete(name);
 
-    return res.status(200).json({message: `type with name ${name} successfully deleted!`});
+      return res.status(200).json({message: `Тип с именем ${name} успешно удален!`});
+    } catch (e) {
+      next(e);
+    }
   }
 
-  async getAll(req, res) {
-    const types = await Type.findAll();
+  async getAll(req, res, next) {
+    try {
+      const types = await typeService.getAll();
 
-    return res.json(types);
+      return res.json(types);
+    } catch (e) {
+      next(e);
+    }
   }
 }
 

@@ -49,8 +49,16 @@ const TypeBrand = sequelize.define('type_brand', {
   id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true}
 });
 
+const Token = sequelize.define('token', {
+  id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+  refreshToken: {type: DataTypes.STRING, allowNull: false}
+})
+
 User.hasOne(Basket);
 Basket.belongsTo(User);
+
+User.hasOne(Token);
+Token.belongsTo(User)
 
 User.hasMany(Rating);
 Rating.belongsTo(User);
@@ -85,5 +93,6 @@ module.exports = {
   Brand,
   Rating,
   TypeBrand,
-  DeviceInfo
+  DeviceInfo,
+  Token
 }
