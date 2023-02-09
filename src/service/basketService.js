@@ -9,8 +9,12 @@ class BasketService {
     return await Basket.findOne({where: {userId}});
   }
 
-  async addToBasket(deviceId, basketId) {
-    return await BasketDevice.create({})
+  async addDeviceToBasket(deviceId, basketId) {
+    return await BasketDevice.create({deviceId, basketId});
+  }
+
+  async deleteDeviceFromBasket(deviceId, basketId) {
+    return await BasketDevice.destroy({where: {deviceId, basketId}});
   }
 
   async getBasketDevices(basketId) {

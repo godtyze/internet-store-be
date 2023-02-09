@@ -47,18 +47,43 @@ class UserController {
       const {refreshToken} = req.cookies;
       await userService.refresh(refreshToken);
       res.clearCookie('refreshToken');
+
       return res.status(200).json({message: 'Логаут успешно выполнен!'});
     } catch (e) {
       next(e);
     }
   }
 
-  async getBasket(req, res, next) {
+  async getBasketDevices(req, res, next) {
     try {
       const {id} = req.params;
-      const basket = await userService.getBasket(id);
+      const basketDevices = await userService.getBasketDevices(id);
 
-      return res.json(basket);
+      return res.json(basketDevices);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async addDeviceToBasket(req, res, next) {
+    try {
+      const {deviceId} = req.body;
+      const {id} = req.params;
+
+      await userService.addDeviceToBasket(deviceId, id);
+      return res.status(200).json({message: 'Товар успешно добавлен в корзину!'});
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  async deleteDeviceFromBasket(req, res, next) {
+    try {
+      const {deviceId} = req.body;
+      const {id} = req.params;
+
+      await userService.deleteDeviceFromBasket(deviceId, id);
+      return res.status(200).json({message: 'Товар успешно удален из корзины!'});
     } catch (e) {
       next(e);
     }

@@ -63,8 +63,19 @@ class UserService {
     return {...tokens, user: userDto};
   }
 
-  async getBasket(userId) {
-    return await basketService.getBasket(userId);
+  async getBasketDevices(userId) {
+    const basket = await basketService.getBasket(userId);
+    return await basketService.getBasketDevices(basket.id);
+  }
+
+  async addDeviceToBasket(deviceId, userId) {
+    const basket = await basketService.getBasket(userId);
+    return await basketService.addDeviceToBasket(deviceId, basket.id);
+  }
+
+  async deleteDeviceFromBasket(deviceId, userId) {
+    const basket = await basketService.getBasket(userId);
+    return await basketService.deleteDeviceFromBasket(deviceId, basket.id);
   }
 }
 
