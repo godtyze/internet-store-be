@@ -27,8 +27,8 @@ class DeviceController {
 
   async getAll(req, res, next) {
     try {
-      const {brandId, typeId, limit, page} = req.query;
-      const devices = await deviceService.getAll(brandId, typeId, limit, page);
+      const {brandId, typeId, query, limit, page} = req.query;
+      const devices = await deviceService.getAll(brandId, typeId, query, limit, page);
 
       return res.json(devices);
     } catch (e) {
