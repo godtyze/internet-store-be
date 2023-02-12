@@ -5,8 +5,10 @@ class DeviceController {
     try {
       const {name, price, brandId, typeId, info} = req.body;
       const {img} = req.files;
+      console.log(name, price, brandId, typeId, info)
 
-      const device = await deviceService.create({name, price, brandId, typeId, img, info});
+
+      const device = await deviceService.create(name, price, brandId, typeId, img, info);
 
       return res.json(device);
     } catch (e) {
@@ -16,12 +18,37 @@ class DeviceController {
 
   async delete(req, res, next) {
     try {
-      const {name} = req.body;
-      await deviceService.delete({where: { name }});
+      const {id} = req.params;
+      await deviceService.delete(id);
 
-      return res.status(200).json({message: `Девайс с именем ${name} успешно удален!`});
+      return res.status(200).json({message: `Девайс с id:${id} успешно удален!`});
     } catch (e) {
       next(ApiError.badRequest(e.message));
+    }
+  }
+
+  async update(req, res, next) {
+    try {
+      const {id} = req.params;
+      const {name, price, info} = req.body;
+
+      await deviceService.update(id, name, price, info);
+      return res.status(200).json({message: `Девайс с id:${id} успешно обновлён!`});
+    } catch (e) {
+      next(ApiError.badRequest(e.message));
+    }
+  }
+
+  async addNewDeviceInfo(req, res, next) {
+    try {
+      const {id} = req.params;
+      const {info} = req.body;
+
+      await deviceService.addNewDeviceInfo(id, info);
+      return res.status(200).json({message: `Девайсу с id:${id} успешно добавлена новая характеристика!`});
+
+    } catch (e) {
+      next(ApiError.badRequest(e.message))
     }
   }
 
