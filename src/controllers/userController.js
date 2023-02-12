@@ -1,6 +1,7 @@
 const ApiError = require('../error/ApiError');
 const {validationResult} = require('express-validator');
 const userService = require('../service/userService');
+
 class UserController {
   async registration(req, res, next) {
     try {
@@ -71,7 +72,7 @@ class UserController {
       const {id} = req.params;
 
       await userService.addDeviceToBasket(deviceId, id);
-      return res.status(200).json({message: 'Товар успешно добавлен в корзину!'});
+      return res.status(200).json({message: `Товар c id:${deviceId} успешно добавлен в корзину пользователя с id:${id}!`});
     } catch (e) {
       next(e);
     }
@@ -83,7 +84,7 @@ class UserController {
       const {id} = req.params;
 
       await userService.deleteDeviceFromBasket(deviceId, id);
-      return res.status(200).json({message: 'Товар успешно удален из корзины!'});
+      return res.status(200).json({message: `Товар с id:${deviceId} успешно удален из корзины пользователя с id:${id}!`});
     } catch (e) {
       next(e);
     }

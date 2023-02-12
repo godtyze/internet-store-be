@@ -3,6 +3,7 @@ const tokenService = require('../service/tokenService');
 
 module.exports = (req, res, next) => {
   try {
+    const {id} = req.params;
     const header = req.headers.authorization;
     if (!header) {
       return next(ApiError.unauthorized('Пользователь не авторизован!'));
@@ -16,6 +17,10 @@ module.exports = (req, res, next) => {
     const userData = tokenService.validateAccessToken(accessToken);
     if (!userData) {
       return next(ApiError.unauthorized('Пользователь не авторизован!'));
+    }
+
+    if (+userData.id !== +id) {
+      return next(ApiError.forbidden('У вас нет доступа к данной корзине!'));
     }
 
     req.user = userData;
