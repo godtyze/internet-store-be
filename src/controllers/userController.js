@@ -46,10 +46,10 @@ class UserController {
   async refresh(req, res, next) {
     try {
       const {refreshToken} = req.cookies;
-      await userService.refresh(refreshToken);
+      const userData = await userService.refresh(refreshToken);
       res.clearCookie('refreshToken');
 
-      return res.status(200).json({message: 'Логаут успешно выполнен!'});
+      return res.json(userData);
     } catch (e) {
       next(e);
     }
