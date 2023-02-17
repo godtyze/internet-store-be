@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const path = require('path');
 const {Device, DeviceInfo} = require('../models/models');
+const ApiError = require('../error/ApiError');
 const {Op} = require('sequelize');
 const {unlink} = require('fs');
 class DeviceService {
@@ -38,6 +39,9 @@ class DeviceService {
 
   async delete(id) {
     const device = await Device.findOne({where: {id}});
+    if (!device) {
+      throw ApiError.badRequest(`Девайс с id:${id} не найден!`);
+    }
 
     await DeviceInfo.destroy({where: {deviceId: id}});
     await Device.destroy({where: { id }});
