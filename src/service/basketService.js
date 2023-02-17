@@ -18,7 +18,7 @@ class BasketService {
   }
 
   async getBasketDevices(basketId) {
-    return await BasketDevice.findAll({where: {basketId}});
+    return await BasketDevice.findAndCountAll({where: {basketId}});
   }
 }
 
