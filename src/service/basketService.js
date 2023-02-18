@@ -1,4 +1,5 @@
-const {Basket, BasketDevice} = require('../models/models');
+const {Basket, BasketDevice, Device} = require('../models/models');
+const ApiError = require('../error/ApiError');
 
 class BasketService {
   async create(userId) {
@@ -10,6 +11,11 @@ class BasketService {
   }
 
   async addDeviceToBasket(deviceId, basketId) {
+    const basketDevices = await this.getBasketDevices(basketId);
+    if (basketDevices.rows.some(device => device.id === deviceId)) {
+      throw ApiError.badRequest('Данный девайс уже находится в корзине!');
+    }
+
     return await BasketDevice.create({deviceId, basketId});
   }
 
@@ -18,7 +24,15 @@ class BasketService {
   }
 
   async getBasketDevices(basketId) {
-    return await BasketDevice.findAndCountAll({where: {basketId}});
+    const ids = await BasketDevice.findAndCountAll({where: {basketId}});
+    const basketDevices = await Promise.all(
+      ids.rows.map(basketDevice => Device.findOne({where: {id: basketDevice.deviceId}}))
+    );
+
+    return {
+      count: ids.count,
+      rows: basketDevices
+    };
   }
 }
 
