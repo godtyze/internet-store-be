@@ -3,8 +3,8 @@ const brandService = require('../service/brandService');
 class BrandController {
   async create(req, res, next) {
     try {
-      const {name} = req.body;
-      const brand = await brandService.create(name);
+      const {name, typeId} = req.body;
+      const brand = await brandService.create(name,typeId);
 
       return res.json(brand);
     } catch (e) {

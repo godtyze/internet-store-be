@@ -2,8 +2,8 @@ const {Brand} = require("../models/models");
 const ApiError = require("../error/ApiError");
 
 class BrandService {
-  async create(name) {
-    return await Brand.create({name});
+  async create(name, typeId) {
+    return await Brand.create({name, typeId});
   }
   async getAll() {
     return await Brand.findAll();

@@ -55,6 +55,8 @@ class DeviceService {
     page = page || 1;
     const offset = page * limit - limit;
     let devices;
+    brandId = brandId?.split('-');
+    typeId = typeId?.split('-');
 
     if (!brandId && !typeId && !query) {
       devices = await Device.findAndCountAll({limit, offset});
