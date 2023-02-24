@@ -29,6 +29,10 @@ class DeviceService {
   }
 
   async update(id, name, price, info) {
+    const device = await Device.findByPk(id);
+    if (!device) {
+      throw ApiError.badRequest(`Девайс с id:${id} не найден!`);
+    }
     await Device.update({name, price}, {where: { id }});
 
     if (info) {

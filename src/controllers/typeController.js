@@ -12,12 +12,24 @@ class TypeController {
     }
   }
 
+  async update(req, res, next) {
+    try {
+      const {id} = req.params;
+      const {name} = req.body;
+      await typeService.update(id, name);
+
+      return res.status(200).json({message: `Тип с id:${id} успешно обновлён!`});
+    } catch (e) {
+      next(e);
+    }
+  }
+
   async delete(req, res, next) {
     try {
-      const {name} = req.body;
-      await typeService.delete(name);
+      const {id} = req.params;
+      await typeService.delete(id);
 
-      return res.status(200).json({message: `Тип с именем ${name} успешно удален!`});
+      return res.status(200).json({message: `Тип с id:${id} успешно удален!`});
     } catch (e) {
       next(e);
     }

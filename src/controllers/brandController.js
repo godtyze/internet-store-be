@@ -14,12 +14,24 @@ class BrandController {
 
   async delete(req, res, next) {
     try {
-      const {name} = req.body;
-      await brandService.delete(name);
+      const {id} = req.params;
+      await brandService.delete(id);
 
-      return res.status(200).json({message: `Бренд с именем ${name} успешно удален!`});
+      return res.status(200).json({message: `Бренд с id:${id} успешно удален!`});
     } catch (e) {
-      next(e)
+      next(e);
+    }
+  }
+
+  async update(req, res, next) {
+    try {
+      const {id} = req.params;
+      const {name, typeId} = req.body;
+      await brandService.update(id, name, typeId);
+
+      return res.status(200).json({message: `Бренд с id:${id} успешно обновлён!`});
+    } catch (e) {
+      next(e);
     }
   }
 

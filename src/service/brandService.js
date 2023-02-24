@@ -9,13 +9,22 @@ class BrandService {
     return await Brand.findAll();
   }
 
-  async delete(name) {
-    const brand = await Brand.findOne({where: { name }});
+  async update(id, name, typeId) {
+    const brand = await Brand.findByPk(id);
     if (!brand) {
-      throw ApiError.badRequest(`Бренд с именем ${name} не найден!`)
+      throw ApiError.badRequest(`Бренд с id:${id} не найден!`)
     }
 
-    await Brand.destroy({where: { name }});
+    await Brand.update({name, typeId}, {where: { id }});
+  }
+
+  async delete(id) {
+    const brand = await Brand.findByPk(id);
+    if (!brand) {
+      throw ApiError.badRequest(`Бренд с id:${id} не найден!`)
+    }
+
+    await Brand.destroy({where: { id }});
   }
 }
 

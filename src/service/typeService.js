@@ -7,13 +7,22 @@ class TypeService {
     return await Type.create({name});
   }
 
-  async delete(name) {
-    const type = await Type.findOne({where: { name }});
+  async update(id, name) {
+    const type = await Type.findByPk(id);
     if (!type) {
-      throw ApiError.badRequest(`Тип с названием ${name} не найден`);
+      throw ApiError.badRequest(`Тип с id:${id} не найден`);
     }
 
-    return await Type.destroy({where: { name }});
+    await Type.update({name}, {where: { id }});
+  }
+
+  async delete(id) {
+    const type = await Type.findByPk(id);
+    if (!type) {
+      throw ApiError.badRequest(`Тип с id:${id} не найден`);
+    }
+
+    return await Type.destroy({where: { id }});
   }
 
   async getAll() {
