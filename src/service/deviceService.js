@@ -58,39 +58,19 @@ class DeviceService {
     limit = limit || 9;
     page = page || 1;
     const offset = page * limit - limit;
-    let devices;
     brandId = brandId?.split('-');
     typeId = typeId?.split('-');
+    const options = {
+      where: {
+        ...(typeId && {typeId}),
+        ...(brandId && {brandId}),
+        ...(query && {name: { [Op.iLike]: `%${query}%` }})
+      },
+      limit,
+      offset
+    };
 
-    if (!brandId && !typeId && !query) {
-      devices = await Device.findAndCountAll({limit, offset});
-    }
-
-    if (brandId && !typeId && !query) {
-      devices = await Device.findAndCountAll({where: {brandId}, limit, offset});
-    }
-
-    if (!brandId && !query && typeId) {
-      devices = await Device.findAndCountAll({where: {typeId}, limit, offset});
-    }
-
-    if (brandId && typeId && !query) {
-      devices = await Device.findAndCountAll({where: {typeId, brandId}, limit, offset});
-    }
-
-    if (!brandId && typeId && query) {
-      devices = await Device.findAndCountAll({where: {typeId, name: { [Op.iLike]: `%${query}%` }}, limit, offset});
-    }
-
-    if (!brandId && !typeId && query) {
-      devices = await Device.findAndCountAll({where: {name: { [Op.iLike]: `%${query}%` }}, limit, offset});
-    }
-
-    if (brandId && typeId && query) {
-      devices = await Device.findAndCountAll({where: {typeId, brandId, name: { [Op.iLike]: `%${query}%` }}, limit, offset});
-    }
-
-    return devices;
+    return await Device.findAndCountAll(options);
   }
 
   async getOne(id) {
