@@ -21,6 +21,7 @@ const Device = sequelize.define('device', {
   name: {type: DataTypes.STRING, unique: true, allowNull: false},
   price: {type: DataTypes.INTEGER, allowNull: false},
   rating: {type: DataTypes.INTEGER, defaultValue: 0},
+  stock: {type: DataTypes.INTEGER, defaultValue: 10},
   img: {type: DataTypes.STRING, allowNull: false}
 });
 
