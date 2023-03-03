@@ -26,8 +26,7 @@ class TypeService {
   }
 
   async getAll() {
-    const types = await Type.findAll();
-    const brands = await brandService.getAll();
+    const [types, brands] = await Promise.all([Type.findAll(), brandService.getAll()]);
 
     const result = types.map(type => {
       const childBrands = [];
