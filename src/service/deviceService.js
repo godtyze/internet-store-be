@@ -25,24 +25,29 @@ class DeviceService {
   }
 
   async addNewDeviceInfo(id, info) {
+    const device = await this.getOne(id);
+    if (!device) {
+      throw ApiError.badRequest(`Девайс с id:${id} не найден!`);
+    }
+
     info.forEach(i => DeviceInfo.create({title: i.title, description: i.description, deviceId: id}));
   }
 
   async update(id, name, price, info) {
-    const device = await Device.findByPk(id);
+    const device = await this.getOne(id);
     if (!device) {
       throw ApiError.badRequest(`Девайс с id:${id} не найден!`);
     }
     await Device.update({name, price}, {where: { id }});
 
     if (info) {
-      info.forEach(i => DeviceInfo.update({title: i.newTitle, description: i.newDescription},
-        {where: {deviceId: id, title: i.title}}));
+      info.forEach(i => DeviceInfo.update({title: i.title, description: i.description},
+        {where: {deviceId: id, id: i.id}}));
     }
   }
 
   async delete(id) {
-    const device = await Device.findOne({where: {id}});
+    const device = await this.getOne(id);
     if (!device) {
       throw ApiError.badRequest(`Девайс с id:${id} не найден!`);
     }
@@ -74,10 +79,7 @@ class DeviceService {
   }
 
   async getOne(id) {
-    return await Device.findOne({
-      where: {id},
-      include: [{model: DeviceInfo, as: 'info'}]
-    });
+    return await Device.findByPk(id, {include: [{model: DeviceInfo, as: 'info'}]});
   }
 }
 
