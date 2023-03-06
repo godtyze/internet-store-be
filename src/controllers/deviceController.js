@@ -4,9 +4,7 @@ class DeviceController {
   async create(req, res, next) {
     try {
       const {name, price, brandId, typeId, info} = req.body;
-      const {img} = req.files;
-      console.log(name, price, brandId, typeId, info)
-
+      const img = req.files?.img;
 
       const device = await deviceService.create(name, price, brandId, typeId, img, info);
 

@@ -6,11 +6,14 @@ const {Op} = require('sequelize');
 const {unlink} = require('fs');
 class DeviceService {
   async create(name, price, brandId, typeId, img, info) {
-      const fileName = uuid.v4() + '.jpg';
+    let fileName;
+      if (img) {
+        fileName = uuid.v4() + '.jpg';
 
-      await img.mv(path.resolve(__dirname, '..', '..', 'static', fileName));
+        await img.mv(path.resolve(__dirname, '..', '..', 'static', fileName));
+      }
 
-      const device = await Device.create({name, price, brandId, typeId, img: fileName});
+      const device = await Device.create({name, price, brandId, typeId, img: fileName || 'default-image.jpg'});
 
       if (info) {
         info = JSON.parse(info);
@@ -54,9 +57,11 @@ class DeviceService {
 
     await DeviceInfo.destroy({where: {deviceId: id}});
     await Device.destroy({where: { id }});
-    unlink(path.resolve(__dirname, '..', '..', 'static', device.img), (err) => {
-      if (err) throw err;
-    });
+    if (device.img !== 'default-image.jpg') {
+      unlink(path.resolve(__dirname, '..', '..', 'static', device.img), (err) => {
+        if (err) throw err;
+      });
+    }
   }
 
   async getAll(brandId, typeId, query, limit, page) {
